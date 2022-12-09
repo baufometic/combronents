@@ -1,0 +1,115 @@
+{
+	"env": {
+		"browser": true,
+		"es2021": true,
+		"node": true
+	},
+	"parser": "@typescript-eslint/parser",
+	"extends": [
+		"eslint:recommended",
+		"plugin:react/recommended",
+		"plugin:react-hooks/recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"ignorePatterns": [
+		".env",
+		"**/node_modules/**",
+		"**/build/*"
+	],
+	"parserOptions": {
+		"ecmaFeatures": {
+			"jsx": true
+		},
+		"ecmaVersion": 12,
+		"sourceType": "module"
+	},
+	"plugins": [
+		"@typescript-eslint"
+	],
+	"root": true,
+	"settings": {
+		"import/resolver": {
+			"node": {
+				"extensions": [
+					".js",
+					".jsx",
+					".ts",
+					".tsx"
+				]
+			}
+		},
+		"react": {
+			"version": "detect"
+		}
+	},
+	"rules": {
+		"array-bracket-spacing": [
+			"error",
+			"always"
+		],
+		"indent": [
+			"error",
+			"tab"
+		],
+		"key-spacing": [
+			"error",
+			{
+				"align": {
+					"beforeColon": true,
+					"afterColon": true,
+					"on": "colon"
+				}
+			}
+		],
+		"linebreak-style": [
+			"error",
+			"unix"
+		],
+		"no-console": "error",
+		"no-multi-spaces": [
+			"error"
+		],
+		"no-restricted-imports": [
+			"error",
+			{
+				"name": "react",
+				"importNames": [
+					"useLayoutEffect"
+				],
+				"message": "useLayoutEffect causes a warning in SSR. Use useEffect"
+			}
+		],
+		"object-curly-spacing": [
+			"error",
+			"always"
+		],
+		"react/jsx-indent": [
+			"error",
+			"tab"
+		],
+		"react/jsx-indent-props": [
+			"error",
+			"tab"
+		],
+		"react/prop-types": 0,
+		"react/react-in-jsx-scope": "off",
+		"react/jsx-curly-spacing": [
+			"warn",
+			{
+				"when": "always",
+				"children": {
+					"when": "always"
+				}
+			}
+		],
+		"quotes": [
+			"error",
+			"double"
+		],
+		"semi": [
+			"error",
+			"always"
+		],
+		"template-curly-spacing": "off"
+	}
+}
