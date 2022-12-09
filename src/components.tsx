@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-extra-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-console */
-import { useRef } from "react";
+import {
+	useEffect, useRef, useState 
+} from "react";
 import styled from "styled-components";
 import {
 	staticStyles, dynamicStyles, TStyleEntries 
@@ -104,6 +106,13 @@ function CreateItemHandler() {
 	};
 }
 
+const InjectStylesheetToHead = (url: string) => {
+	const link = document.createElement("link");
+	link.rel = "stylesheet";
+	link.href = url;
+	document.getElementsByTagName("head")[0].appendChild(link);
+};
+
 //*____________________ HOC ____________________
 interface IHOCProps {
 	children?: React.ReactNode;
@@ -115,116 +124,132 @@ interface IHOCProps {
 
 // * Works by returning an an array of css strings, which gets pushed to useRef and into a styled component
 const HOC = ({ children, elementType, ...props }: IHOCProps) => {
-	console.time("HOC performance");
-	const stylesRef = useRef<string[]>([]);
+	const [ stylesArray, setStylesArray ] = useState<string[]>([]);
 	const googleFontsURLRef = useRef<string[]>([]);
 	
-	console.log("__________ HOC __________");
-	console.log("elementType", elementType);
-	console.log(props);
+	useEffect(() => {
+		console.time("HOC performance");
+		console.log("__________ HOC __________");
+		console.log("elementType", elementType);
+		console.log(props);
+
+		const items = CreateItemHandler();
+		items.InitialiseChildArrays();
 	
-	const items = CreateItemHandler();
-	items.InitialiseChildArrays();
+		const booleanKeys = (Object.keys(props) as (keyof typeof props)[]).filter(key => {
+			if (typeof props[key] === "boolean") {
+				console.log(key);
+				return key;
+			}
+		});
+	
+		// * CHECK THE KEY AGAINST MULTIPLE STYLES (child, static, dynamic)
+		console.log("Checking potential keys against types:");
 
-	const booleanKeys = (Object.keys(props) as (keyof typeof props)[]).filter(key => {
-		if (typeof props[key] === "boolean") {
-			console.log(key);
-			return key;
-		}
-	});
-
-	// * CHECK THE KEY AGAINST MULTIPLE STYLES (child, static, dynamic)
-	console.log("Checking potential keys against types:");
-		
-	booleanKeys.map((currentKey: string) => {
-		items.ResetChildren(); // TODO document this
-		console.log(`currentKey: ${ currentKey }`);
-
-		//*____________________ CHILD ENTRIES ____________________
-		//* Handle child entry by grouping it with other child elements before appending to the main array
-		if (currentKey.startsWith("child")) {
-			//* Mark the current iteration as a child, so it's styles are grouped together by the handler
-			console.log("Type: child item");
-			items.currentIterationIsChild = true;
-
-			//* Grab the first part of the key i.e. 'child10_'
-			const childPrefix = currentKey.split("_").shift();
-
-			if (childPrefix) {
-				console.log(`childPrefix: ${ childPrefix }`);
-
-				const extractedChildIndex = childPrefix.match(/\d+/g); //* extract the number i.e. '10'
-				if (extractedChildIndex) {
-					//* Set the child index so the appropriate array gets populated in childCSS by the next stage of this map
-					items.nthChildIndex = Number(extractedChildIndex);
-					console.log(`nthChildIndex: ${ items.nthChildIndex }`);
-
-					//* Extract the actual css shorcode i.e. h_full
-					//* Continue on in the map, using the shortcode with the extracted code
-					const actualCSSShortcode = currentKey.split(`child${ extractedChildIndex }_`).pop();
-					if (actualCSSShortcode) {
-						currentKey = actualCSSShortcode;
+		booleanKeys.map((currentKey: string) => {
+			items.ResetChildren(); // TODO document this
+			console.log(`currentKey: ${ currentKey }`);
+	
+			//*____________________ CHILD ENTRIES ____________________
+			//* Handle child entry by grouping it with other child elements before appending to the main array
+			if (currentKey.startsWith("child")) {
+				//* Mark the current iteration as a child, so it's styles are grouped together by the handler
+				console.log("Type: child item");
+				items.currentIterationIsChild = true;
+	
+				//* Grab the first part of the key i.e. 'child10_'
+				const childPrefix = currentKey.split("_").shift();
+	
+				if (childPrefix) {
+					console.log(`childPrefix: ${ childPrefix }`);
+	
+					const extractedChildIndex = childPrefix.match(/\d+/g); //* extract the number i.e. '10'
+					if (extractedChildIndex) {
+						//* Set the child index so the appropriate array gets populated in childCSS by the next stage of this map
+						items.nthChildIndex = Number(extractedChildIndex);
+						console.log(`nthChildIndex: ${ items.nthChildIndex }`);
+	
+						//* Extract the actual css shorcode i.e. h_full
+						//* Continue on in the map, using the shortcode with the extracted code
+						const actualCSSShortcode = currentKey.split(`child${ extractedChildIndex }_`).pop();
+						if (actualCSSShortcode) {
+							currentKey = actualCSSShortcode;
+						}
 					}
 				}
 			}
-		}
-
-		//*____________________ REGULAR (intellisense) ____________________
-		if (Object.keys(staticStyles).includes(currentKey)) {
-			items.AddCSSStyle(staticStyles[currentKey as keyof typeof staticStyles]);
-			return;
-		}
-
-		//*____________________ DYNAMIC TYPES (non intellisense) ____________________
-		//* Grab the shortcodes prefix e.g. 'gtc' or 'gtr' (**no underscore**)
-		//* to gauge which dynamic entry to get function of
-		const dynamicPrefix = currentKey.split("_").shift() as keyof typeof dynamicStyles;
-
-		if (dynamicPrefix) {
-			if (Object.keys(dynamicStyles).includes(dynamicPrefix)) {
-				const style = dynamicStyles[dynamicPrefix](currentKey);
-				items.AddCSSStyle(style);
+	
+			//*____________________ REGULAR (intellisense) ____________________
+			if (Object.keys(staticStyles).includes(currentKey)) {
+				items.AddCSSStyle(staticStyles[currentKey as keyof typeof staticStyles]);
 				return;
 			}
-		}
-
-		//*____________________ CSS TRANSFORMS (non intellisense) ____________________
-		// TODO these aren't currently in intellisense at all
-		if (currentKey.toLowerCase().startsWith("rotatex_")) {
-			const values = currentKey.split("_").pop();
-			items.AddTransform([ `rotateX(${ values });` ]);
-		} else if (currentKey.toLowerCase().startsWith("rotatey_")) {
-			const values = currentKey.split("_").pop();
-			items.AddTransform([ `rotateY(${ values });` ]);
-		}
-
-		//*____________________ FONTS (non intellisense) ____________________
-		if (currentKey.toLowerCase().startsWith("font_")) {
-			//* Remove font_ prefix
-			const prefixRemoved = currentKey.split("font_").pop()!!;
-			console.log(prefixRemoved);
-			
-			const fontWeight = prefixRemoved.split("_").pop()!!; // as TFontNames // TODO needed for TS?
-			console.log(fontWeight);
-
-			const fontName = prefixRemoved.split(`_${ fontWeight }`).shift()!!;
-			console.log(fontName);
-
-			const originalFontName = GetOriginalFontName(fontName);
-			console.log("originalFontName", originalFontName);
-			googleFontsURLRef.current.push(`${ originalFontName }:wght@${ fontWeight }`); // eg Roboto:wght@100;300  although multiple inline weights aren't currently allowed
-			items.AddCSSStyle([ `font-family: ${ originalFontName }`, `font-weight: ${ fontWeight }` ]);
-		}
-	});
-
-	stylesRef.current = items.Organise();
-	console.log("stylesRef.current:");
-	console.log(stylesRef.current);
 	
-	console.timeEnd("HOC performance");
+			//*____________________ DYNAMIC TYPES (non intellisense) ____________________
+			//* Grab the shortcodes prefix e.g. 'gtc' or 'gtr' (**no underscore**)
+			//* to gauge which dynamic entry to get function of
+			const dynamicPrefix = currentKey.split("_").shift() as keyof typeof dynamicStyles;
+	
+			if (dynamicPrefix) {
+				if (Object.keys(dynamicStyles).includes(dynamicPrefix)) {
+					const style = dynamicStyles[dynamicPrefix](currentKey);
+					items.AddCSSStyle(style);
+					return;
+				}
+			}
+	
+			//*____________________ CSS TRANSFORMS (non intellisense) ____________________
+			// TODO these aren't currently in intellisense at all
+			if (currentKey.toLowerCase().startsWith("rotatex_")) {
+				const values = currentKey.split("_").pop();
+				items.AddTransform([ `rotateX(${ values });` ]);
+			} else if (currentKey.toLowerCase().startsWith("rotatey_")) {
+				const values = currentKey.split("_").pop();
+				items.AddTransform([ `rotateY(${ values });` ]);
+			}
+	
+			//*____________________ FONTS (non intellisense) ____________________
+			if (currentKey.toLowerCase().startsWith("font_")) {
+				//* Remove font_ prefix
+				const prefixRemoved = currentKey.split("font_").pop()!!;
+				console.log(prefixRemoved);
+				
+				const fontWeight = prefixRemoved.split("_").pop()!!; // as TFontNames // TODO needed for TS?
+				console.log(fontWeight);
+	
+				const fontName = prefixRemoved.split(`_${ fontWeight }`).shift()!!;
+				console.log(fontName);
+	
+				const originalFontName = GetOriginalFontName(fontName);
+				console.log("originalFontName", originalFontName);
+				googleFontsURLRef.current.push(`${ originalFontName }:wght@${ fontWeight }`); // eg Roboto:wght@100;300  although multiple inline weights aren't currently allowed
+				items.AddCSSStyle([ `font-family: ${ originalFontName }`, `font-weight: ${ fontWeight }` ]);
+			}
+		});
+
+		if (googleFontsURLRef.current.length > 0) {
+			const fontsURL =
+				"https://fonts.googleapis.com/css2?family=" +
+				googleFontsURLRef.current.map(n => n.replace(/ /g, "+")).join("&family=") +
+				"&display=swap";
+				
+			InjectStylesheetToHead(fontsURL);
+		}
+
+		setStylesArray(items.Organise());
+		console.log("stylesArray:");
+		console.log(stylesArray);
+		console.timeEnd("HOC performance");
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		console.log("styled array again");
+	}, [ stylesArray ]);
+
 	return(
 		<>
-			{ googleFontsURLRef.current.length > 0 && (
+			{ /* { googleFontsURLRef.current.length > 0 && (
 				<head>
 					<link
 						rel="preconnect"
@@ -232,18 +257,15 @@ const HOC = ({ children, elementType, ...props }: IHOCProps) => {
 					/>
 					<link
 						href={
-							"https://fonts.googleapis.com/css2?family=" +
-							googleFontsURLRef.current.map(n => n.replace(/ /g, "+")).join("&family=") +
-
-							"&display=swap"
+							fontsURL
 						}
 						rel="stylesheet"
 					/>
 				</head>
-			) }
+			) } */ }
 		
 			<StyledComponent
-				arr={ [ ...stylesRef.current ] }
+				arr={ [ ...stylesArray ] }
 				as={ elementType }
 				//data-testid="hoc-component"
 				{ ...props }>
