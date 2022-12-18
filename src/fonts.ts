@@ -22,6 +22,7 @@ export const GetOriginalFontName = (formattedName: string) => {
 	return match?.originalName;
 };
 
+//! KEEP
 //* USED TO GENERATE STRINGS FROM Font Data file
 // const JoinFontsAndPrint = () => {
 // 	const arr = [] as string[];
