@@ -190,6 +190,16 @@ const plainStyles = {
 	*/
 	display_block: [ "display: block" ],
 
+	/**
+	* css:  `display: grid;`
+	*/
+	display_grid: [ "display: grid" ],
+
+	/**
+	* css:  `display: flex;`
+	*/
+	display_flex: [ "display: flex" ],
+
 	//*____________________ POSITIONING ____________________
 	
 	
@@ -543,7 +553,7 @@ type num0to10 = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 type num0to20 = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20; 
 type num0to100fixed = `0${ num0to9 }${ num0to9 }`|"100";
 type num1to9 = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-type num1to10 = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+//type num1to10 = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 type num1to10fixed = `0${ num1to9 }` | "10";
 
 const COLOURS = [ "black", "blue", "green", "grey", "orange", "red", "white" ] as const;
@@ -584,7 +594,6 @@ type __main__ =
 	Record<`text_${ typeof COLOURS[number] }`, string[]> &
 	Record<`lineheight_${ num0to20 }`, string[]> &
 	Record<`fontsize_${ num0to20 }`, string[]> &
-	Record<`gridfixed_${ num1to10 }`, string[]> &
 	Record<`gap_${ num0to10 }`, string[]> &
 	Record<`font_${ FONT_STRINGS }`, string[]>; //* FONT HANDLING - CALLS THE GOOGLE API AND INJECTS TO THE HEAD DYNAMICALLY
 
@@ -657,25 +666,6 @@ const AddFixed0to100pc: T_addFixed0to100pc = (shortCode, cssOutput) => {
 	return obj;
 };
 
-//*____________________ ADD STRINGS 000pc to 100pc ____________________
-// * GRID FIXED - where eg. 'grid_3x6' (i.e. grid_RowsXcolumns) = "repeat(1fr, 3) repeat(1fr, 6)"
-const AddGridFixed = () => {
-	const GRIDFIXED_LEVELS = 10; //* 10 rows, 10 columns
-	const obj = {} as T_entries;
-
-	for (let row = 1; row <= GRIDFIXED_LEVELS; row++) {
-		for (let column = 1; column <= GRIDFIXED_LEVELS; column++) {
-			const key = `gridfixed_${ row }x${ column }` as keyof T_entries;
-			obj[key] = [
-				"display: grid",
-				`grid-template-rows: repeat(${ row }, 1fr)`,
-				`grid-template-columns: repeat(${ column }, 1fr)`
-			];
-		}
-	}
-	return obj;
-};
-
 //*__________ LOOP CREATED STYLES (NO USER CUSTOMISATION AT TYPE TYPE) __________
 export const staticStyles: T_entries = {
 	...plainStyles,
@@ -719,11 +709,8 @@ export const staticStyles: T_entries = {
 	...AddStaticStyleInLoop(20, "rem", "lineheight", [ "line-height" ]), // TODO issue setting to 0rem?
 
 	//* GRID
-	...AddGridFixed(),
 	...AddStaticStyleInLoop(10, "rem", "gap", [ "gap" ], [ "display: grid" ]) //* append display: grid to all incase
 };
-
-// TODO extend the react Div props out so regular stuff is available not just children
 
 type A = {
 	[key in keyof typeof staticStyles]?: boolean;

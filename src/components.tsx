@@ -10,11 +10,13 @@ import {
 } from "./styles";
 import { GetOriginalFontName } from "./fonts";
 
+// TODO SC with SSR - have to filter out repeat keys, maybe think useMemo or even outside of component
+// TODO use describe to style the SC's
+// TODO allow non boolean keys through the app
+// TODO make sure clicks work for buttons
 // TODO make hex and rgb available as well as ordinary colours
 // TODO add loop created styles to the README
-
 // TODO check the props array types match against a hard type somewhere
-
 // TODO need to somehow merge the transformations or they are canceled by cascade
 // TODO when using - transformations may be affected by further code, so extract consumers of these out into containers
 
@@ -117,9 +119,8 @@ const InjectStylesheetToHead = (url: string) => {
 interface IHOCProps {
 	children?: React.ReactNode;
 	elementType:
-	"button" | "div" |
-	"h1" | "h2" |
-	"p" | "span";
+	"button" | "div" | "h1" | "h2" | "p" |
+	"section" | "span";
 }
 
 // * Works by returning an an array of css strings, which gets pushed to useRef and into a styled component
@@ -250,6 +251,7 @@ const HOC = ({ children, elementType, ...props }: IHOCProps) => {
 	return(
 		<>
 			{ /* { googleFontsURLRef.current.length > 0 && (
+				TODO possible to speed up font load with this?
 				<head>
 					<link
 						rel="preconnect"
@@ -276,23 +278,55 @@ const HOC = ({ children, elementType, ...props }: IHOCProps) => {
 	);
 };
 
+interface IButton extends TStyleEntries, React.HTMLProps<HTMLButtonElement> {}
+interface IDiv extends TStyleEntries, React.ComponentPropsWithoutRef<"div"> {}
+interface IH1 extends TStyleEntries, React.ComponentPropsWithoutRef<"h1"> {}
+interface IH2 extends TStyleEntries, React.ComponentPropsWithoutRef<"h2"> {}
+interface IP extends TStyleEntries, React.HTMLProps<HTMLParagraphElement> {}
+interface ISection extends TStyleEntries, React.HTMLProps<"section"> {}
+interface ISpan extends TStyleEntries, React.HTMLProps<HTMLSpanElement> {}
+
+export const Button = ({ ...props }: IButton) => <HOC
+	elementType="button"
+	{ ...props }
+/>;
+export const Div = ({ ...props }: IDiv) => <HOC
+	elementType="div"
+	{ ...props }
+/>;
+export const H1 = ({ ...props }: IH1) => <HOC
+	elementType="h1"
+	{ ...props }
+/>;
+export const H2 = ({ ...props }: IH2) => <HOC
+	elementType="h2"
+	{ ...props }
+/>;
+export const P = ({ ...props }: IP) => <HOC
+	elementType="p"
+	{ ...props }
+/>;
+export const Section = ({ ...props }: ISection) => <HOC
+	elementType="section"
+	{ ...props }
+/>;
+export const Span = ({ ...props }: ISpan) => <HOC
+	elementType="span"
+	{ ...props }
+/>;
+
 // interface I_A extends TStyleBooleanEntries, React.HTMLProps<HTMLAnchorElement> {}
 // interface I_Area extends TStyleBooleanEntries, React.HTMLProps<HTMLAreaElement> {}
 // interface I_Base extends TStyleBooleanEntries, React.HTMLProps<HTMLBaseElement> {}
 // interface I_Body extends TStyleBooleanEntries, React.HTMLProps<HTMLBodyElement> {}
-interface IButton extends TStyleEntries, React.HTMLProps<HTMLButtonElement> {}
 // interface I_Canvas extends TStyleBooleanEntries, React.HTMLProps<HTMLCanvasElement> {}
-
 // interface I_Data extends TStyleBooleanEntries, React.HTMLProps<HTMLDataElement> {}
 // interface I_Details extends TStyleBooleanEntries, React.HTMLProps<HTMLDetailsElement> {}
 // interface I_Dialog extends TStyleBooleanEntries, React.HTMLProps<HTMLDialogElement> {}
-interface IDiv extends TStyleEntries, React.ComponentPropsWithoutRef<"div"> {}
 // interface I_Embed extends TStyleBooleanEntries, React.HTMLProps<HTMLEmbedElement> {}
 // interface I_Figure extends TStyleBooleanEntries, React.ComponentPropsWithoutRef<"figure"> {}
 // interface I_Footer extends TStyleBooleanEntries, React.ComponentPropsWithoutRef<"footer"> {}
 // interface I_Form extends TStyleBooleanEntries, React.HTMLProps<HTMLFormElement> {}
-interface IH1 extends TStyleEntries, React.ComponentPropsWithoutRef<"h1"> {}
-interface IH2 extends TStyleEntries, React.ComponentPropsWithoutRef<"h2"> {}
 // interface I_Head extends TStyleBooleanEntries, React.HTMLProps<HTMLHeadElement> {}
 // interface I_Header extends TStyleBooleanEntries, React.ComponentPropsWithoutRef<"header"> {}
 // interface I_Html extends TStyleBooleanEntries, React.HTMLProps<HTMLHtmlElement> {}
@@ -310,48 +344,28 @@ interface IH2 extends TStyleEntries, React.ComponentPropsWithoutRef<"h2"> {}
 // interface I_Ol extends TStyleBooleanEntries, React.ComponentPropsWithoutRef<"ol"> {}
 // interface I_Option extends TStyleBooleanEntries, React.HTMLProps<HTMLOptionElement> {}
 // interface I_Output extends TStyleBooleanEntries, React.HTMLProps<HTMLOutputElement> {}
-interface IP extends TStyleEntries, React.HTMLProps<HTMLParagraphElement> {}
 // interface I_Pre extends TStyleBooleanEntries, React.HTMLProps<HTMLPreElement> {}
 // interface I_Progress extends TStyleBooleanEntries, React.HTMLProps<HTMLProgressElement> {}
 // interface I_Script extends TStyleBooleanEntries, React.HTMLProps<HTMLScriptElement> {}
-// interface I_Section extends TStyleBooleanEntries, React.ComponentPropsWithoutRef<"section"> {}
 // interface I_Select extends TStyleBooleanEntries, React.HTMLProps<HTMLSelectElement> {}
 // interface I_Source extends TStyleBooleanEntries, React.HTMLProps<HTMLSourceElement> {}
-interface ISpan extends TStyleEntries, React.HTMLProps<HTMLSpanElement> {}
 // interface I_Time extends TStyleBooleanEntries, React.HTMLProps<HTMLTimeElement> {}
 // interface I_Title extends TStyleBooleanEntries, React.HTMLProps<HTMLTitleElement> {}
 // interface I_Ul extends TStyleBooleanEntries, React.ComponentPropsWithoutRef<"ul"> {}
 // interface I_Video extends TStyleBooleanEntries, React.ComponentPropsWithoutRef<"video"> {}
 
-
 // export const A = ({ ...props }: I_A) => <HOC elementType="A" { ...props } />;
 // export const Area = ({ ...props }: I_Area) => <HOC elementType="Area" { ...props } />;
 // export const Base = ({ ...props }: I_Base) => <HOC elementType="Base" { ...props } />;
 // export const Body = ({ ...props }: I_Body) => <HOC elementType="Body" { ...props } />;
-export const Button = ({ ...props }: IButton) => <HOC
-	elementType="button"
-	{ ...props }
-/>;
 // export const Canvas = ({ ...props }: I_Canvas) => <HOC elementType="Canvas" { ...props } />;
 // export const Data = ({ ...props }: I_Data) => <HOC elementType="Data" { ...props } />;
 // export const Details = ({ ...props }: I_Details) => <HOC elementType="Details" { ...props } />;
 // export const Dialog = ({ ...props }: I_Dialog) => <HOC elementType="Dialog" { ...props } />;
-export const Div = ({ ...props }: IDiv) => <HOC
-	elementType="div"
-	{ ...props }
-/>;
 // export const Embed = ({ ...props }: I_Embed) => <HOC elementType="Embed" { ...props } />;
 // export const Figure = ({ ...props }: I_Figure) => <HOC elementType="Figure" { ...props } />;
 // export const Footer = ({ ...props }: I_Footer) => <HOC elementType="Footer" { ...props } />;
 // export const Form = ({ ...props }: I_Form) => <HOC elementType="Form" { ...props } />;
-export const H1 = ({ ...props }: IH1) => <HOC
-	elementType="h1"
-	{ ...props }
-/>;
-export const H2 = ({ ...props }: IH2) => <HOC
-	elementType="h2"
-	{ ...props }
-/>;
 // export const Head = ({ ...props }: I_Head) => <HOC elementType="Head" { ...props } />;
 // export const Header = ({ ...props }: I_Header) => <HOC elementType="Header" { ...props } />;
 // export const Html = ({ ...props }: I_Html) => <HOC elementType="Html" { ...props } />;
@@ -369,20 +383,11 @@ export const H2 = ({ ...props }: IH2) => <HOC
 // export const Ol = ({ ...props }: I_Ol) => <HOC elementType="Ol" { ...props } />;
 // export const Option = ({ ...props }: I_Option) => <HOC elementType="Option" { ...props } />;
 // export const Output = ({ ...props }: I_Output) => <HOC elementType="Output" { ...props } />;
-export const P = ({ ...props }: IP) => <HOC
-	elementType="p"
-	{ ...props }
-/>;
 // export const Pre = ({ ...props }: I_Pre) => <HOC elementType="Pre" { ...props } />;
 // export const Progress = ({ ...props }: I_Progress) => <HOC elementType="Progress" { ...props } />;
 // export const Script = ({ ...props }: I_Script) => <HOC elementType="Script" { ...props } />;
-// export const Section = ({ ...props }: I_Section) => <HOC elementType="Section" { ...props } />;
 // export const Select = ({ ...props }: I_Select) => <HOC elementType="Select" { ...props } />;
 // export const Source = ({ ...props }: I_Source) => <HOC elementType="Source" { ...props } />;
-export const Span = ({ ...props }: ISpan) => <HOC
-	elementType="span"
-	{ ...props }
-/>;
 // export const Time = ({ ...props }: I_Time) => <HOC elementType="Time" { ...props } />;
 // export const Title = ({ ...props }: I_Title) => <HOC elementType="Title" { ...props } />;
 // export const Ul = ({ ...props }: I_Ul) => <HOC elementType="Ul" { ...props } />;

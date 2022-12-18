@@ -1,14 +1,12 @@
+![Logo](https://raw.githubusercontent.com/baufometic/combronents/master/public/combronents_logo.png)
+
 # Combronents
-_Rapidly_ style components with full intellisense and type support.<br/>
+Rapidly style components with full intellisense and type support.<br/>
 
 - Forget memorising long lists of CSS shortcodes
-- Remix new styles just by typing them
 - Add Google fonts to a component using only the font name
 - SSR capable with frameworks like Next
 <br /><br />
-
-## Preview
-![App Screenshot](https://user-images.githubusercontent.com/48098170/166976829-cf86cb05-e2c3-455b-b76f-4e7429a24180.png)
 
 ## *Coming shortly*:
 - Describe your style in a sentence, and it'll turn it into CSS
@@ -18,7 +16,7 @@ _Rapidly_ style components with full intellisense and type support.<br/>
 
 ## Installation
 ```bash
-  npm i @techandtribal/combronents
+  npm i combronents
 ```
 
 ## Usage
@@ -26,61 +24,104 @@ _Rapidly_ style components with full intellisense and type support.<br/>
 2. Pass in your desired styles, use intellisense for suggestions
 
 ```typescript
+
 import { Div, H1, Section } from "combronents";
 
+// Nested components aren't a problem
 const GridWithTitle = () => (
 	<Div
-		gap_2 gridfixed_2x4
-		h_full w_90pc>
+		grid gap_2 gtc_1fr_1fr
+		h_full w_090pc>
 
 		<H1
-			font_orbitron fontsize_2
 			mt_3 p_2 bg_grey>
 
 			Web 3 is For Our Kids
 		</H1>
 	</Div>
-)
+);
 
-// This feature is experimental and being tested
+// Pull in Google fonts easily
 const WithGoogleFonts = () => (
-	<Div font_orbitron>
-		Thats it. Simple.
+	<Div font_orbitron_400 fontsize_4>
+		Orbitron with weight 400
 	</Div>
-)
+);
 
+// Target child elements
 const StyledChildren = () => (
-	<Div children_center>
-		<Section border_blue color_fuchsia>
-			{ "I'm a centered child" }
+	<Div child01_flex_center>
+		<Section border_blue text_green>
+			A section styled with flex, centered,
+			and with a blue border and green text
 		</Section>
 	</Div>
-)
+);
 ```
 ___
 
 <br />
 
 # Static vs Dynamic Key Codes
-Static key codes generate fixed styles. For example:
+### Static key codes are strongly typed:
+
 ```javascript
 <Div
 	h_full
-	border_solid
+	border_solid border_green
 />
 ```
 
-Dynamic key codes on the other hand, allow you to customise certain key codes. For example:
+Generates this CSS:
+
+```css
+height: full;
+border: 1px solid green;
+```
+
+<br />
+
+### Dynamic key codes are more creative:
 
 ```javascript
 <Div
-	gridfixed_2x4
-	child_3_bring_to_top
+	gtc_1fr_2fr
 />
 ```
+Generates:
+```css
+display: grid;
+grid-template-columns: 1fr 2fr;
+```
+
 <br/>
 
-## List of Static Key Codes
+
+# Target Child Elements
+
+```javascript
+<Div pos_relative child01_absolute>
+	<div>
+		An absolutely positioned child
+	</div>
+</Div>
+```
+
+Generates this CSS:
+```css
+position: relative;
+
+>:nth-child(1) {
+	position: absolute;
+}
+```
+
+<br />
+
+
+## List of Static Key Codes (INCOMPLETE)
+#### _This list does not contain all of the current styles so use intellisense to explore_
+
 <br/>
 
 ### Sizing
@@ -215,7 +256,7 @@ Dynamic key codes on the other hand, allow you to customise certain key codes. F
 <br/>
 
 ## 🚀 About Me
-I'm Pete Savva, a day trader and developer at [Tech & Tribal](https://techandtribal.com), and father to my newborn son Maximus.
+I'm Pete Savva, a day trader and developer at [Tech & Tribal](www.techandtribal.com), and father to my newborn son Maximus.
 
 <br/>
 [GitHub](https://www.github.com/baufometic)<br/>
