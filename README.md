@@ -8,7 +8,7 @@ Rapidly style components with full intellisense and type support.<br/>
 - SSR capable with frameworks like Next
 <br /><br />
 
-## *Coming shortly*:
+## *Coming soon*:
 - Describe your style in a sentence, and it'll turn it into CSS
 - Remix Run template
 
@@ -29,33 +29,33 @@ import { Div, H1, Section } from "combronents";
 
 // Nested components aren't a problem
 const GridWithTitle = () => (
-	<Div
-		grid gap_2 gtc_1fr_1fr
-		h_full w_090pc>
+  <Div
+    grid gap_2 gtc_1fr_1fr
+    h_full w_090pc>
 
-		<H1
-			mt_3 p_2 bg_grey>
+    <H1
+      mt_3 p_2 bg_grey>
 
-			Web 3 is For Our Kids
-		</H1>
-	</Div>
+      Web 3 is For Our Kids
+    </H1>
+  </Div>
 );
 
 // Pull in Google fonts easily
 const WithGoogleFonts = () => (
-	<Div font_orbitron_400 fontsize_4>
-		Orbitron with weight 400
-	</Div>
+  <Div font_orbitron_400 fontsize_4>
+    Orbitron with weight 400
+  </Div>
 );
 
 // Target child elements
 const StyledChildren = () => (
-	<Div child01_flex_center>
-		<Section border_blue text_green>
-			A section styled with flex, centered,
-			and with a blue border and green text
-		</Section>
-	</Div>
+  <Div child01_flex_center>
+    <Section border_blue text_green>
+      A section styled with flex, centered,
+      and with a blue border and green text
+    </Section>
+  </Div>
 );
 ```
 ___
@@ -67,8 +67,8 @@ ___
 
 ```javascript
 <Div
-	h_full
-	border_solid border_green
+  h_full
+  border_solid border_green
 />
 ```
 
@@ -85,7 +85,7 @@ border: 1px solid green;
 
 ```javascript
 <Div
-	gtc_1fr_2fr
+  gtc_1fr_2fr
 />
 ```
 Generates:
@@ -101,9 +101,9 @@ grid-template-columns: 1fr 2fr;
 
 ```javascript
 <Div pos_relative child01_absolute>
-	<div>
-		An absolutely positioned child
-	</div>
+  <div>
+    An absolutely positioned child
+  </div>
 </Div>
 ```
 
@@ -112,7 +112,7 @@ Generates this CSS:
 position: relative;
 
 >:nth-child(1) {
-	position: absolute;
+  position: absolute;
 }
 ```
 
@@ -194,18 +194,18 @@ position: relative;
 ### Flex
 | Key | Means |
 --- | ---|
-| flex        | `display: flex;`
+| flex    | `display: flex;`
 | flex_center | `align-items: center; display: flex; justify-content: center;`
 | flex_column | `display: flex; flex-direction: column;`
-| flex_row    | `display: flex; flex-direction: row;`
+| flex_row  | `display: flex; flex-direction: row;`
 <br/>
 
 ### Grid
 | Key | Means |
 --- | ---|
-| grid             | `display: grid;`
+| grid       | `display: grid;`
 | grid_auto_column | `display: grid; grid-auto-flow: column; grid-auto-columns: 1fr;`
-| grid_auto_row    | `display: grid; grid-auto-flow: row; grid-auto-rows: 1fr;`
+| grid_auto_row  | `display: grid; grid-auto-flow: row; grid-auto-rows: 1fr;`
 <br/>
 
 ### Fonts and Text
