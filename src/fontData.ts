@@ -1,4 +1,5 @@
 /**
+ * List of Google fonts
  * Used to generate strings such as font_abeezee_400
  */
 export const FONT_STRINGS_ARRAY = [

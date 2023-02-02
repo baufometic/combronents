@@ -47,6 +47,12 @@
 			"error",
 			"always"
 		],
+		"no-trailing-spaces": [
+			"error",
+			{
+				"skipBlankLines": true
+			}
+		],
 		"indent": [
 			"error",
 			"tab"

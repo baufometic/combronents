@@ -1,7 +1,7 @@
 {
 	"name": "combronents",
-	"description": "Rapid inline DOM styling, with full intellisense and type support",
-	"version": "1.17.0",
+	"description": "Rapid inline component styling, with font support. Fully typed.",
+	"version": "1.20.0",
 	"author": "Peter Papasavvas <peter@techandtribal.com> (https://techandtribal.com)",
 	"license": "MIT",
 	"keywords": [

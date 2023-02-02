@@ -239,7 +239,7 @@ const plainStyles = {
 	],
 	left: [
 		"position: absolute",
-		"left: 0"	
+		"left: 0"
 	],
 	right: [
 		"position: absolute",
@@ -550,7 +550,7 @@ const RemStr = (value: number): string => `${ value * 0.25 }rem`;
 //*__________ LOOP CREATED TYPES __________
 type num0to9 = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type num0to10 = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
-type num0to20 = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20; 
+type num0to20 = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20;
 type num0to100fixed = `0${ num0to9 }${ num0to9 }`|"100";
 type num1to9 = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 //type num1to10 = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
@@ -612,7 +612,7 @@ type T_addStaticStyle = (
 	additionalStyles?: string[]
 ) => T_entries;
 
-//*____________________ ADD STYLES AS A LOOP - i.e. 0 to 10 ____________________ 
+//*____________________ ADD STYLES AS A LOOP - i.e. 0 to 10 ____________________
 const AddStaticStyleInLoop: T_addStaticStyle = (arraySize, format, shortCode, cssOutputs, additionalStyles) => {
 	const obj = {} as T_entries;
 	

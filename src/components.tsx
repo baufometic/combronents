@@ -2,11 +2,11 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-console */
 import {
-	useEffect, useRef, useState 
+	useEffect, useRef, useState
 } from "react";
 import styled from "styled-components";
 import {
-	staticStyles, dynamicStyles, TStyleEntries 
+	staticStyles, dynamicStyles, TStyleEntries
 } from "./styles";
 import { GetOriginalFontName } from "./fonts";
 
@@ -20,7 +20,7 @@ import { GetOriginalFontName } from "./fonts";
 // TODO need to somehow merge the transformations or they are canceled by cascade
 // TODO when using - transformations may be affected by further code, so extract consumers of these out into containers
 
-//*____________________ STYLED COMPONENT - just exists to pass the filtered styles into a HTML element ____________________ 
+//*____________________ STYLED COMPONENT - just exists to pass the filtered styles into a HTML element ____________________
 const StyledComponent = styled.div<{arr: string[]}>`
 	${ ({ arr }) => [ ...arr ] };
 `;
@@ -56,7 +56,7 @@ function CreateItemHandler() {
 				this.cssStyles.push(...items);
 			} else {
 				console.log(`Adding CSS style [child]: ${ items.join(" ") }`);
-				this.cssStylesChild[this.nthChildIndex].push(...items);	
+				this.cssStylesChild[this.nthChildIndex].push(...items);
 			}
 		},
 		AddTransform: function(items: string[]) {
