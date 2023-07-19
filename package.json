@@ -1,6 +1,6 @@
 {
 	"name": "combronents",
-	"description": "Rapid inline component styling, with font support. Fully typed.",
+	"description": "Rapid inline component styling. Inbuilt Google fonts, intellisense and types.",
 	"version": "1.20.0",
 	"author": "Peter Papasavvas <peter@techandtribal.com> (https://techandtribal.com)",
 	"license": "MIT",

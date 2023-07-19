@@ -1,7 +1,7 @@
 ![Logo](https://raw.githubusercontent.com/baufometic/combronents/master/public/combronents_logo.png)
 
 # Combronents
-Rapidly style components with full intellisense and type support.<br/>
+Rapid inline component styling. Inbuilt Google fonts, intellisense and types.<br/>
 
 - Forget memorising long lists of CSS shortcodes
 - Add Google fonts to a component using only the font name
