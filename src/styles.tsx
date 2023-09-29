@@ -201,8 +201,6 @@ const plainStyles = {
 	display_flex: [ "display: flex" ],
 
 	//*____________________ POSITIONING ____________________
-	
-	
 	/**
 	 * css:  `z-index: 99999999;`
 	*/
@@ -558,50 +556,63 @@ type num1to10fixed = `0${ num1to9 }` | "10";
 
 const COLOURS = [ "black", "blue", "green", "grey", "orange", "red", "white" ] as const;
 
+const num0to10 = Array.from(Array(11).keys());
+
+type X = typeof num0to10[number];
+type TheseAreTheSame = Record<
+	| `border_radius_${X}`
+	| `border_width_${X}`
+	| `border_${X}`
+	| `gap_${X}`
+	| `p_${X}` | `pt_${X}` | `pb_${X}` | `pl_${X}` | `pr_${X}` | `px_${X}` | `py_${X}`
+	| `m_${X}` | `mt_${X}` | `mb_${X}` | `ml_${X}` | `mr_${X}` | `mx_${X}` | `my_${X}`
+	| `h_${X}` | `w_${X}`,
+	string[]>
+
+// Record<`border_radius_${ num0to10 }`, string[]> &
+// Record<`border_width_${ num0to10 }`, string[]> &
+// Record<`border_${ num0to10 }`, string[]> &
+// Record<`gap_${ num0to10 }`, string[]> &
+// Record<`p_${ num0to10 }`, string[]> &
+// Record<`pt_${ num0to10 }`, string[]> &
+// Record<`pb_${ num0to10 }`, string[]> &
+// Record<`pl_${ 	num0to10 }`, string[]> &
+// Record<`pr_${ num0to10 }`, string[]> &
+// Record<`px_${ num0to10 }`, string[]> &
+// Record<`py_${ num0to10 }`, string[]> &
+// Record<`m_${ num0to10 }`, string[]> &
+// Record<`mt_${ num0to10 }`, string[]> &
+// Record<`mb_${ num0to10 }`, string[]> &
+// Record<`ml_${ num0to10 }`, string[]> &
+// Record<`mr_${ num0to10 }`, string[]> &
+// Record<`mx_${ num0to10 }`, string[]> &
+// Record<`my_${ num0to10 }`, string[]> &
+// Record<`h_${ num0to10 }`, string[]> &
+// Record<`w_${ num0to10 }`, string[]> &
+
 //* THESE TYPES ARE CREATED IN THE LOOPS FURTHER DOWN
 type __main__ =
 	typeof plainStyles &
-	// old version of plainStyles:
-	//TPlainStyles &
-	//Record<keyof typeof plainStyles, string[]> &
 
 	Record<`${ keyof typeof dynamicStyles }_${ string }`, string[]> &
-	
+
 	//* These are inserted properly by loops
 	Record<`bg_${ typeof COLOURS[number] }`, string[]> &
-	Record<`border_radius_${ num0to10 }`, string[]> &
-	Record<`border_width_${ num0to10 }`, string[]> &
-	Record<`border_${ num0to10 }`, string[]> &
 	Record<`border_${ typeof COLOURS[number] }`, string[]> &
-	Record<`p_${ num0to10 }`, string[]> &
-	Record<`pt_${ num0to10 }`, string[]> &
-	Record<`pb_${ num0to10 }`, string[]> &
-	Record<`pl_${ num0to10 }`, string[]> &
-	Record<`pr_${ num0to10 }`, string[]> &
-	Record<`px_${ num0to10 }`, string[]> &
-	Record<`py_${ num0to10 }`, string[]> &
-	Record<`m_${ num0to10 }`, string[]> &
-	Record<`mt_${ num0to10 }`, string[]> &
-	Record<`mb_${ num0to10 }`, string[]> &
-	Record<`ml_${ num0to10 }`, string[]> &
-	Record<`mr_${ num0to10 }`, string[]> &
-	Record<`mx_${ num0to10 }`, string[]> &
-	Record<`my_${ num0to10 }`, string[]> &
-	Record<`h_${ num0to10 }`, string[]> &
-	Record<`w_${ num0to10 }`, string[]> &
+	TheseAreTheSame &
 	Record<`h_${ num0to100fixed }pc`, string[]> &
 	Record<`w_${ num0to100fixed }pc`, string[]> &
 	Record<`text_${ typeof COLOURS[number] }`, string[]> &
 	Record<`lineheight_${ num0to20 }`, string[]> &
 	Record<`fontsize_${ num0to20 }`, string[]> &
-	Record<`gap_${ num0to10 }`, string[]> &
 	Record<`font_${ FONT_STRINGS }`, string[]>; //* FONT HANDLING - CALLS THE GOOGLE API AND INJECTS TO THE HEAD DYNAMICALLY
 
 //* CHILD TYPES ARE JUST AN MAIN TYPES WITH 'CHILD_' IN FRONT
-type __child__ = Record<`child${ num1to10fixed }_${ keyof __main__ }`, string[]>;
+// BUG This is causing extremely slow intellisense on consuming components due to the 44k+ entries. Might need to rethink it.
+// type __child__ = Record<`child${ num1to10fixed }_${ keyof __main__ }`, string[]>;
 
 //! COMBINATION OF MAIN AND CHILD TYPES
-type T_entries = __main__ & __child__;
+type T_entries = __main__ //& __child__; // BUG removed, see above
 
 //*____________________ FUNCTION TYPES ____________________
 type T_addStaticStyle = (
@@ -630,13 +641,7 @@ const AddStaticStyleInLoop: T_addStaticStyle = (arraySize, format, shortCode, cs
 };
 
 //*____________________ ADD STYLES FROM A LIST ____________________
-type T_addStylesFromList = (
-	shortCode: string,
-	cssOutput: string,
-	list: readonly string[]
-) => T_entries;
-
-const AddStylesFromList: T_addStylesFromList = (shortCode, cssOutput, list) => {
+const AddStylesFromList = (shortCode: string, cssOutput: string, list: readonly string[]): T_entries => {
 	const obj = {} as T_entries;
 	list.map(item => {
 		const key = `${ shortCode }_${ item }` as keyof T_entries;
@@ -648,12 +653,7 @@ const AddStylesFromList: T_addStylesFromList = (shortCode, cssOutput, list) => {
 };
 
 //*____________________ ADD STRINGS 000pc to 100pc ____________________
-type T_addFixed0to100pc = (
-	shortCode: string,
-	cssOutput: string
-) => T_entries;
-
-const AddFixed0to100pc: T_addFixed0to100pc = (shortCode, cssOutput) => {
+const AddFixed0to100pc = (shortCode: string, cssOutput: string): T_entries => {
 	//* '%' is unavailable to use inside attribute in html. i.e height_20% doesn't work, so we use 'pc'
 	const obj = {} as T_entries;
 	for (let idx = 0; idx <= 100; idx++) {
@@ -715,6 +715,8 @@ export const staticStyles: T_entries = {
 type A = {
 	[key in keyof typeof staticStyles]?: boolean;
 };
+
+export type ATemp = Record<keyof typeof staticStyles, boolean>;
 
 type B = {
 	["css"]?: string;

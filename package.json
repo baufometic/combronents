@@ -1,7 +1,7 @@
 {
 	"name": "combronents",
 	"description": "Rapid inline component styling. Inbuilt Google fonts, intellisense and types.",
-	"version": "1.22.0",
+	"version": "1.27.0",
 	"author": "Peter Papasavvas <peter@techandtribal.com> (https://techandtribal.com)",
 	"license": "MIT",
 	"keywords": [
@@ -42,7 +42,7 @@
 	"peerDependencies": {
 		"react": "^18.1.0",
 		"react-dom": "^18.1.0",
-		"styled-components": "^5.3.5"
+		"styled-components": "^6.0.3"
 	},
 	"devDependencies": {
 		"@rollup/plugin-commonjs": "^22.0.0",
@@ -57,7 +57,6 @@
 		"@types/react": "^18.0.8",
 		"@types/react-dom": "^18.0.3",
 		"@types/rollup-plugin-peer-deps-external": "^2.2.1",
-		"@types/styled-components": "^5.1.25",
 		"@typescript-eslint/eslint-plugin": "^5.22.0",
 		"@typescript-eslint/parser": "^5.22.0",
 		"eslint": "^8.14.0",
